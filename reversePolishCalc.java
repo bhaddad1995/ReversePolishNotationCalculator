@@ -144,6 +144,7 @@ class reversePolishCalc{
                     case "-": answer = nextNum - topNum; break;
                     case "*": answer = nextNum * topNum; break;
                     case "/": answer = nextNum / topNum; break;
+                    case "%": answer = nextNum % topNum; break;
                 }
 
                 this.eval.push(answer);
@@ -157,7 +158,7 @@ class reversePolishCalc{
         if(a.equals("+") || a.equals("-")){
             return true;
         }else{
-            if(b.equals("*") || b.equals("/")){
+            if(b.equals("*") || b.equals("/") || b.equals("%")){
                 return true;
             }else{
                 return false;
