@@ -12,6 +12,7 @@ class reversePolishCalc{
     Scanner reader = new Scanner(System.in);  // Reading from System.in
 
     public Stack<Character> opStack = new Stack<Character>();
+    public Stack<Integer> eval = new Stack<Integer>();
     public Vector<String> postfixExp = new Vector<String>();
     public Vector<String> infixExp = new Vector<String>();
     public static void main(String[] args){
@@ -22,9 +23,9 @@ class reversePolishCalc{
         calc.convertToPostfix();
         System.out.println("\nPostfix Equation:");
         calc.printPostfixExp();
-        System.out.println();
-        // System.out.print(calc.getOpStackTop());
-
+        System.out.println("\nEvaluated answer:");
+        int ans = calc.evaluatePostfixExp();
+        System.out.println(ans);
     }
 
     public void promptUserForInfixInput(){
@@ -116,6 +117,34 @@ class reversePolishCalc{
             this.postfixExp.add(Character.toString(this.opStack.peek()));
             this.opStack.pop();
         }
+
+    }
+
+    public int evaluatePostfixExp(){
+        String t;
+        int topNum, nextNum, answer = 0;
+        while(!this.postfixExp.isEmpty()){
+            t = this.postfixExp.firstElement();
+            this.postfixExp.remove(0);
+            if(checkIfNumber(t.charAt(0))){
+                this.eval.push(Integer.parseInt(t));
+            }else{
+                topNum = this.eval.peek();
+                this.eval.pop();
+                nextNum = this.eval.peek();
+                this.eval.pop();
+
+                switch(t){
+                    case "+": answer = nextNum + topNum; break;
+                    case "-": answer = nextNum - topNum; break;
+                    case "*": answer = nextNum * topNum; break;
+                    case "/": answer = nextNum / topNum; break;
+                }
+
+                this.eval.push(answer);
+            }
+        }
+        return this.eval.peek();
 
     }
 
