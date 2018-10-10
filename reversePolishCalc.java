@@ -17,25 +17,30 @@ class reversePolishCalc{
     public Vector<String> infixExp = new Vector<String>();
     public static void main(String[] args){
         reversePolishCalc calc = new reversePolishCalc();
-        calc.promptUserForInfixInput();
-        System.out.println("\nInfix Equation:");
-        calc.printInfxExp();
-        calc.convertToPostfix();
-        System.out.println("\nPostfix Equation:");
-        calc.printPostfixExp();
-        System.out.println("\nEvaluated answer:");
-        int ans = calc.evaluatePostfixExp();
-        System.out.println(ans);
+        while(true){
+            calc.promptUserForInfixInput();
+            System.out.println("\nInfix Equation:");
+            calc.printInfxExp();
+            calc.convertToPostfix();
+            System.out.println("\nPostfix Equation:");
+            calc.printPostfixExp();
+            System.out.println("\nEvaluated answer:");
+            int ans = calc.evaluatePostfixExp();
+            System.out.println(ans+ "\n");
+        }
     }
 
     public void promptUserForInfixInput(){
         String infix = "";
         while(infix.isEmpty()){
-                System.out.print("Enter an Infix expression: ");
+                System.out.print("Enter an Infix expression (enter 'quit' to exit program): ");
                 infix = reader.nextLine(); // Scans the next token of the input as an int.
                 // if(resumeGame == 0 || resumeGame == 1){
                 //     break;
                 // }
+                if(infix.equals("quit") || infix.equals("Quit")){
+                    System.exit(0);
+                }
         }
         setInfixExp(infix);
     }
