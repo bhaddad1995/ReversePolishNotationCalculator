@@ -25,8 +25,10 @@ class reversePolishCalc{
             System.out.println("\nPostfix Equation:");
             calc.printPostfixExp();
             System.out.println("\nEvaluated answer:");
-            int ans = calc.evaluatePostfixExp();
-            System.out.println(ans+ "\n");
+            Integer ans = calc.evaluatePostfixExp();
+            if(ans != null){
+                System.out.println(ans+ "\n");
+            }
         }
     }
 
@@ -125,7 +127,7 @@ class reversePolishCalc{
 
     }
 
-    public int evaluatePostfixExp(){
+    public Integer evaluatePostfixExp(){
         String t;
         int topNum, nextNum, answer = 0;
         while(!this.postfixExp.isEmpty()){
@@ -143,7 +145,14 @@ class reversePolishCalc{
                     case "+": answer = nextNum + topNum; break;
                     case "-": answer = nextNum - topNum; break;
                     case "*": answer = nextNum * topNum; break;
-                    case "/": answer = nextNum / topNum; break;
+                    case "/": 
+                        if(topNum == 0){
+                            System.out.println("Error: Cannot divide by 0\n");
+                            return null;
+                         }else{
+                            answer = nextNum / topNum;
+                         }
+                         break;
                     case "%": answer = nextNum % topNum; break;
                 }
 
