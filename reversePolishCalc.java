@@ -13,7 +13,7 @@ class reversePolishCalc{
 
     Scanner reader = new Scanner(System.in);  // Reading from System.in
 
-    public Stack<Character> opStack = new Stack<Character>();
+    public Stack<String> opStack = new Stack<String>();
     public Stack<Double> eval = new Stack<Double>();
     public Vector<String> postfixExp = new Vector<String>();
     public Vector<String> infixExp = new Vector<String>();
@@ -55,12 +55,20 @@ class reversePolishCalc{
             toAdd = "";
             if(infix.charAt(i) == ' '){
                 continue;
-            }else if(!checkIfNumber(infix.charAt(i))){
+            }else if(infix.charAt(i) == 'P'){
+                if(infix.substring(i, i+3).equals("POW")){
+                    toAdd = "POW";
+                    i = i+2;
+                }
+            }else if(!checkIfNumber(infix.charAt(i)) && infix.charAt(i) != '.'){
                 toAdd = Character.toString(infix.charAt(i));
             }else{
                 toAdd = Character.toString(infix.charAt(i));
+                if(toAdd.equals(".")){
+                    toAdd = "0" + toAdd;
+                }
                 if(i != infix.length()-1){
-                    while(checkIfNumber(infix.charAt(i+1))){
+                    while(checkIfNumber(infix.charAt(i+1)) || infix.charAt(i+1) == '.'){
                         i++;
                         toAdd += infix.charAt(i);
                         if(i == infix.length()-1){
@@ -105,25 +113,25 @@ class reversePolishCalc{
             if(checkIfNumber(t.charAt(0))){
                 this.postfixExp.add(t);
             }else if(this.opStack.isEmpty()){
-                this.opStack.push(t.charAt(0));
+                this.opStack.push(t);
             }else if(t.equals("(")){
-                this.opStack.push(t.charAt(0));
+                this.opStack.push(t);
             }else if(t.equals(")")){
-                while(this.opStack.peek() != '('){
-                    this.postfixExp.add(Character.toString(this.opStack.peek()));
+                while(!this.opStack.peek().equals("(")){
+                    this.postfixExp.add(this.opStack.peek());
                     this.opStack.pop();
                 }
                 this.opStack.pop();//get rid of ( character
             }else{
-                while(!this.opStack.isEmpty() && this.opStack.peek() != '(' && checkPrecedence(t, Character.toString(this.opStack.peek()))){
-                    this.postfixExp.add(Character.toString(this.opStack.peek()));
+                while(!this.opStack.isEmpty() && !this.opStack.peek().equals("(") && checkPrecedence(t, this.opStack.peek())){
+                    this.postfixExp.add(this.opStack.peek());
                     this.opStack.pop();
                 }
-                this.opStack.push(t.charAt(0));
+                this.opStack.push(t);
             }
         }
         while(!this.opStack.isEmpty()){
-            this.postfixExp.add(Character.toString(this.opStack.peek()));
+            this.postfixExp.add(this.opStack.peek());
             this.opStack.pop();
         }
 
@@ -147,7 +155,7 @@ class reversePolishCalc{
                     case "+": answer = nextNum + topNum; break;
                     case "-": answer = nextNum - topNum; break;
                     case "*": answer = nextNum * topNum; break;
-                    case "^": answer = Math.pow(nextNum, topNum); break;
+                    case "POW": answer = Math.pow(nextNum, topNum); break;
                     case "/":
                         if(topNum == 0){
                             System.out.println("Error: Cannot divide by 0\n");
@@ -171,6 +179,8 @@ class reversePolishCalc{
     public boolean checkPrecedence(String a, String b){//checks if precedence of a <= precedence of b. Assumes a comes later in the equation than b
         if(a.equals("+") || a.equals("-")){
             return true;
+        }else if(b.equals("POW")){
+            return true;
         }else{
             if(b.equals("*") || b.equals("/") || b.equals("%")){
                 return true;
@@ -180,8 +190,8 @@ class reversePolishCalc{
         }
     }
 
-    public char getOpStackTop(){
-        return (char) this.opStack.peek();
+    public String getOpStackTop(){
+        return this.opStack.peek();
     }
 
 }
