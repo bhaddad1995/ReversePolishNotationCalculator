@@ -39,9 +39,6 @@ class reversePolishCalc{
         while(infix.isEmpty()){
             System.out.print("Enter an Infix expression (enter 'quit' to exit program): ");
             infix = reader.nextLine(); // Scans the next token of the input as an int.
-            // if(resumeGame == 0 || resumeGame == 1){
-            //     break;
-            // }
             if(infix.trim().equals("quit") || infix.trim().equals("Quit")){
                 System.exit(0);
             }
@@ -53,22 +50,22 @@ class reversePolishCalc{
         String toAdd;
         for(int i = 0; i < infix.length(); i++){
             toAdd = "";
-            if(infix.charAt(i) == ' '){
+            if(infix.charAt(i) == ' '){//ignore space
                 continue;
-            }else if(infix.charAt(i) == 'P'){
+            }else if(infix.charAt(i) == 'P'){//need to check if we have the POW operator
                 if(infix.substring(i, i+3).equals("POW")){
                     toAdd = "POW";
                     i = i+2;
                 }
-            }else if(!checkIfNumber(infix.charAt(i)) && infix.charAt(i) != '.'){
+            }else if(!checkIfNumber(infix.charAt(i)) && infix.charAt(i) != '.'){//check for all other operators
                 toAdd = Character.toString(infix.charAt(i));
             }else{
                 toAdd = Character.toString(infix.charAt(i));
-                if(toAdd.equals(".")){
+                if(toAdd.equals(".")){//preappend 0 to any decimal so that we can use Double.parseDouble later on
                     toAdd = "0" + toAdd;
                 }
                 if(i != infix.length()-1){
-                    while(checkIfNumber(infix.charAt(i+1)) || infix.charAt(i+1) == '.'){
+                    while(checkIfNumber(infix.charAt(i+1)) || infix.charAt(i+1) == '.'){//add until the end of the number considering decimal place
                         i++;
                         toAdd += infix.charAt(i);
                         if(i == infix.length()-1){
@@ -98,7 +95,7 @@ class reversePolishCalc{
     }
 
     public boolean checkIfNumber(char a){
-        if((int) a >= 48 && (int) a <= 57){
+        if((int) a >= 48 && (int) a <= 57){//check ascii value to determine if a is a number
             return true;
         }else{
             return false;
@@ -151,7 +148,7 @@ class reversePolishCalc{
                 nextNum = this.eval.pop();
 
 
-                switch(t){
+                switch(t){//compute answer
                     case "+": answer = nextNum + topNum; break;
                     case "-": answer = nextNum - topNum; break;
                     case "*": answer = nextNum * topNum; break;
@@ -179,7 +176,7 @@ class reversePolishCalc{
     public boolean checkPrecedence(String a, String b){//checks if precedence of a <= precedence of b. Assumes a comes later in the equation than b
         if(a.equals("+") || a.equals("-")){
             return true;
-        }else if(b.equals("POW")){
+        }else if(b.equals("POW")){//POW always has precedence
             return true;
         }else{
             if(b.equals("*") || b.equals("/") || b.equals("%")){
@@ -189,9 +186,4 @@ class reversePolishCalc{
             }
         }
     }
-
-    public String getOpStackTop(){
-        return this.opStack.peek();
-    }
-
 }
