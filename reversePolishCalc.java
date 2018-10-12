@@ -6,13 +6,15 @@ import java.util.Iterator;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.Vector;
+import java.math.*;
+import java.lang.String;
 
 class reversePolishCalc{
 
     Scanner reader = new Scanner(System.in);  // Reading from System.in
 
     public Stack<Character> opStack = new Stack<Character>();
-    public Stack<Integer> eval = new Stack<Integer>();
+    public Stack<Double> eval = new Stack<Double>();
     public Vector<String> postfixExp = new Vector<String>();
     public Vector<String> infixExp = new Vector<String>();
     public static void main(String[] args){
@@ -25,7 +27,7 @@ class reversePolishCalc{
             System.out.println("\nPostfix Equation:");
             calc.printPostfixExp();
             System.out.println("\nEvaluated answer:");
-            Integer ans = calc.evaluatePostfixExp();
+            Double ans = calc.evaluatePostfixExp();
             if(ans != null){
                 System.out.println(ans+ "\n");
             }
@@ -35,14 +37,14 @@ class reversePolishCalc{
     public void promptUserForInfixInput(){
         String infix = "";
         while(infix.isEmpty()){
-                System.out.print("Enter an Infix expression (enter 'quit' to exit program): ");
-                infix = reader.nextLine(); // Scans the next token of the input as an int.
-                // if(resumeGame == 0 || resumeGame == 1){
-                //     break;
-                // }
-                if(infix.equals("quit") || infix.equals("Quit")){
-                    System.exit(0);
-                }
+            System.out.print("Enter an Infix expression (enter 'quit' to exit program): ");
+            infix = reader.nextLine(); // Scans the next token of the input as an int.
+            // if(resumeGame == 0 || resumeGame == 1){
+            //     break;
+            // }
+            if(infix.trim().equals("quit") || infix.trim().equals("Quit")){
+                System.exit(0);
+            }
         }
         setInfixExp(infix);
     }
@@ -127,34 +129,37 @@ class reversePolishCalc{
 
     }
 
-    public Integer evaluatePostfixExp(){
+    public Double evaluatePostfixExp(){
         String t;
-        int topNum, nextNum, answer = 0;
+        double topNum, nextNum, answer = 0;
         while(!this.postfixExp.isEmpty()){
             t = this.postfixExp.firstElement();
             this.postfixExp.remove(0);
             if(checkIfNumber(t.charAt(0))){
-                this.eval.push(Integer.parseInt(t));
+                this.eval.push(Double.parseDouble(t));
             }else{
-                topNum = this.eval.peek();
-                this.eval.pop();
-                nextNum = this.eval.peek();
-                this.eval.pop();
+                topNum = this.eval.pop();
+
+                nextNum = this.eval.pop();
+
 
                 switch(t){
                     case "+": answer = nextNum + topNum; break;
                     case "-": answer = nextNum - topNum; break;
                     case "*": answer = nextNum * topNum; break;
-                    case "/": 
+                    case "^": answer = Math.pow(nextNum, topNum); break;
+                    case "/":
                         if(topNum == 0){
                             System.out.println("Error: Cannot divide by 0\n");
                             return null;
-                         }else{
+                        }else{
                             answer = nextNum / topNum;
-                         }
-                         break;
+                        }
+                        break;
                     case "%": answer = nextNum % topNum; break;
                 }
+
+                String answerString = Double.toString(answer);
 
                 this.eval.push(answer);
             }
